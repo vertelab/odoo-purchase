@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-    
+
   <template id="report_purchaseorder_document" inherit_id="purchase.report_purchaseorder_document">
-    <xpath expr="//thead//th[@class='text-center']" position="replace">
+    <xpath expr="//th[@class='text-center']" position="replace">
     </xpath>
-    <xpath expr="//tbody//td[@class='text-center']" position="replace">
+    <xpath expr="//td[@class='text-center']" position="replace">
     </xpath>
   </template>
 
