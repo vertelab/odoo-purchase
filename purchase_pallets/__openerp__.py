@@ -28,6 +28,19 @@
     'summary': 'Calculates pallets for a purchase order',
     'description': """
 Calculates incomming volumes in pallets for a purchase order.
+This is a rough estimate of the number of pallets that the
+supplier will use for the delivery. This is for planning
+delivery reception. We don't know if the supplier uses mixed 
+pallets or not.
+
+After installation of module:
+1) Activate "Allow to define several packaging methods on products" in Settings/Configuration/Warehouse
+2) On products and raw material bought: Inventory -> Packaging / Configuration and add a configuration that holds
+   a Pallet Logistik unit of the type pallet. The number of units fitted on a pallet is calculated by 
+   Quantity by package * Package by layer * Number of layers.
+   
+If there are several pallet configurations we choose the largest pallet that holds the most units of the product.
+Even if a whole purchase order fits on a single pallet it will be counted as at least one pallet.
 
 
 Financed by Dermanord
