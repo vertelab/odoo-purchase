@@ -45,7 +45,7 @@ Even if a whole purchase order fits on a single pallet it will be counted as at 
 
 Financed by Dermanord
     """,
-    'depends': ['purchase', ],
+    'depends': ['purchase','delivery' ],
     'data': [
         'purchase_view.xml',
         ],

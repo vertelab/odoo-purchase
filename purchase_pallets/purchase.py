@@ -70,6 +70,18 @@ class product_packaging(models.Model):
         self.calc_pallets = self.qty * self.ul_qty * self.rows
     calc_pallets = fields.Float(compute="_calc_pallets")
 
+class stock_picking(models.Model):  
+    _inherit = 'stock.picking'
 
+    @api.one
+    def _calc_pallets(self):
+        self.calc_pallets = int(math.ceil(sum(self.move_lines.mapped('calc_pallets')) + 0.0001))
+    calc_pallets = fields.Float(compute="_calc_pallets")
+
+
+class stock_move(models.Model):  
+    _inherit = 'stock.move'
+
+    calc_pallets = fields.Float(related="purchase_line_id.calc_pallets")
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
