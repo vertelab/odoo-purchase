@@ -6,8 +6,7 @@
             <field name="name">PO line tags</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field name="state">code</field>
-            <field name="code">
-lines = env['purchase.order.line'].browse([])
+            <field name="code">lines = env['purchase.order.line'].browse([])
 for o in object.browse(context.get('active_ids', [])):
     for line in o.order_line:
         for i in range(0, int(line.product_qty)):
