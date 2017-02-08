@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="purchase_order_line_tags" model="ir.actions.server">
+            <field name="name">PO line tags</field>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field name="state">code</field>
+            <field name="code">
+lines = env['purchase.order.line'].browse([])
+for o in object.browse(context.get('active_ids', [])):
+    for line in o.order_line:
+        for i in range(0, int(line.product_qty)):
+            lines += line
+action = env['report'].get_action(lines, 'purchase_cavarosa.po_glabels_tags_report')
+            </field>
+        </record>
+
+        <record id="ir_values_po_line_tags" model="ir.values">
+            <field name="name">Run PO line tags</field>
+            <field name="model">purchase.order</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.server,%s' %ref('purchase_cavarosa.purchase_order_line_tags')"/>
+        </record>
+
+    </data>
+</openerp>
