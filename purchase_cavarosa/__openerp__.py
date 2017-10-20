@@ -30,10 +30,11 @@
 Print out purchase order line tags
 ==================================
     """,
-    'depends': ['purchase', 'report_glabels'],
+    'depends': ['purchase', 'report_glabels', 'sale_purchase'],
     'data': [
         'report_purchaseorder.xml',
         'purchaseorder_data.xml',
+        'purchase_view.xml',
         ],
     'installable': True,
     'application': False,
