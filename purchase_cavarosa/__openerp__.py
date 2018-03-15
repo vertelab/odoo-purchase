@@ -23,6 +23,7 @@
     'name': 'Purchase Cavarosa',
     'version': '0.1',
     'author': 'Vertel AB',
+    'license': 'AGPL-3',
     'category': 'purchase',
     'website': 'http://www.vertel.se',
     'summary': 'Adaptions for Cavarosa',

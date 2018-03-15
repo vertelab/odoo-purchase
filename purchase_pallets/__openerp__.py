@@ -23,6 +23,7 @@
     'name': 'Purchase Calc Pallets',
     'version': '0.1',
     'author': 'Vertel AB',
+    'license': 'AGPL-3',
     'category': 'base',
     'website': 'http://www.vertel.se',
     'summary': 'Calculates pallets for a purchase order',
