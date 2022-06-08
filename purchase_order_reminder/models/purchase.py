@@ -9,5 +9,4 @@ class Purchase(models.Model):
         mail_template = self.env.ref('purchase_order_reminder.email_purchase_order_deadline')
         for order in self.env['purchase.order'].search([]):
             if order.date_order and fields.Datetime.today() > order.date_order:
-                print("Hello")
                 mail_template.send_mail(order.id, force_send=True)
