@@ -33,6 +33,7 @@
     'depends': ['purchase',],
     'data': [
         'views/purchase_view.xml',
+        'security/purchase_security.xml',
     ],
     'application': False,
     'installable': True,
