@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_purchaseorder_document" inherit_id="purchase_stock.report_purchaseorder_document">
+        <xpath expr="//t[@t-else='']/t[@t-set='information_block']/div[@t-if='o.picking_type_id and o.picking_type_id.warehouse_id']/div[@t-field='o.picking_type_id.warehouse_id.partner_id']" position="after">
+            <t t-if="o.company_id.fiscal_position_id.id == o.fiscal_position_id.id" t-set="has_fiscal_position" t-value="True"/>
+            <t t-elif="not o.company_id.fiscal_position_id or not o.fiscal_position_id" t-set="has_fiscal_position" t-value="True"/>
+            <p t-if="has_fiscal_position"><t t-esc="o.picking_type_id.warehouse_id.partner_id.country_id.vat_label or 'Tax ID'"/>: <span t-field="o.picking_type_id.warehouse_id.partner_id.vat"/></p>
+        </xpath>
+    </template>
+
+    <template id="report_purchasequotation_document" inherit_id="purchase_stock.report_purchasequotation_document">
+        <xpath expr="//t[@t-else='']/t[@t-set='information_block']/div[@t-if='o.picking_type_id and o.picking_type_id.warehouse_id']" position="after">
+            <t t-if="o.company_id.fiscal_position_id.id == o.fiscal_position_id.id" t-set="has_fiscal_position" t-value="True"/>
+            <t t-elif="not o.company_id.fiscal_position_id or not o.fiscal_position_id" t-set="has_fiscal_position" t-value="True"/>
+            <p t-if="has_fiscal_position"><t t-esc="o.picking_type_id.warehouse_id.partner_id.country_id.vat_label or 'Tax ID'"/>: <span t-field="o.picking_type_id.warehouse_id.partner_id.vat"/></p>
+        </xpath>
+    </template>
+</odoo>
