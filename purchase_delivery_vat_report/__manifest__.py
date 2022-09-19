@@ -3,7 +3,7 @@
 {
     'name': 'Purchase: Controls VAT on Purchase Report',
     'version': '14.0.0.0.1',
-    'category': 'Purchase Management',
+    'category': 'Inventory/Purchase',
     'author': 'Vertel AB',
     'website': 'https://vertel.se/apps/odoo-purchase/purchase_delivery_vat_report',
     'license': 'LGPL-3',
