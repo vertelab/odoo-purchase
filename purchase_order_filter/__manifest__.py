@@ -27,7 +27,7 @@
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/14.0/odoo/addons/base/data/ir_module_category_data.xml
     # for the full list
-    'category': 'Inventory',
+    'summary': 'Purchase Order Filter',
     'description': """
     Defaults purchase to my purchases.
     """,
@@ -40,21 +40,6 @@
     'maintainer': 'Vertel AB',
     'repository': 'https://github.com/vertelab/odoo-purchase',
     # Any module necessary for this one to work correctly
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
-
-
-{
-    'name': 'Purchase Order Filter',
-    'version': '14.0.0.1.0',
-    'category': 'Purchase',
-    'summary': 'Purchase Order Filter',
-    'licence': 'AGPL-3',
-    'description': """
-        Defaults purchase to my purchases
-    """,
-    'author': 'Vertel AB',
-    'website': 'http://www.vertel.se',
     'depends': ['purchase',],
     'data': [
         'views/purchase_view.xml',
@@ -63,4 +48,4 @@
     'application': False,
     'installable': True,
 }
-# vim:expandtab:smartindent:tabstop=4s:softtabstop=4:shiftwidth=4:
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
