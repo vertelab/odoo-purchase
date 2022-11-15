@@ -4,11 +4,11 @@
 {
     'name': 'Purchase: Default IncoTerms',
     'version': '14.0.0.0.3',
-    'category': 'Purchase Management',
+    'category': 'Inventory',
     'author': 'ICTSTUDIO | André Schenkels',
     'website': 'http://www.ictstudio.eu',
     'license': 'LGPL-3',
-    'summary': 'Provide Sale Order Reference on Purchase Order Dropshipment',
+    'summary': 'Provide Sale Order Reference on Purchase Order Drop shipment',
     'depends': [
         'purchase_stock'
     ],
