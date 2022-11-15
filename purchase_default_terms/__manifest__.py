@@ -2,7 +2,7 @@
 # Copyright© 2016-2017 ICTSTUDIO <http://www.ictstudio.eu>
 # License: AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
 {
-    'name': 'Purchase Default IncoTerms',
+    'name': 'Purchase: Default IncoTerms',
     'version': '14.0.0.0.3',
     'category': 'Purchase Management',
     'author': 'ICTSTUDIO | André Schenkels',
