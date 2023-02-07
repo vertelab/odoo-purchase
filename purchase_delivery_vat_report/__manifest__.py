@@ -40,10 +40,7 @@
     'maintainer': 'Vertel AB',
     'repository': 'https://github.com/vertelab/odoo-purchase',
     # Any module necessary for this one to work correctly
-    'depends': [
-        'base_company_fiscal_position',
-        'purchase_stock'
-    ],
+    'depends': ['base_company_fiscal_position','purchase_stock',],
     'data': [
         'report/purchase_report_templates.xml',
     ],
