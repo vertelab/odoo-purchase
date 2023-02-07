@@ -9,11 +9,10 @@
     'website': 'http://www.ictstudio.eu',
     'license': 'LGPL-3',
     'summary': 'Provide Sale Order Reference on Purchase Order Drop shipment',
-    'depends': [
-        'purchase_stock'
-    ],
+    'depends': ['purchase_stock'],
     'data': [
         'views/res_config_settings_views.xml'
     ],
     'installable': True,
 }
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
