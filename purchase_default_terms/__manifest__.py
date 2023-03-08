@@ -5,10 +5,20 @@
     'name': 'Purchase: Default IncoTerms',
     'version': '14.0.0.0.3',
     'category': 'Inventory',
+    'summary': 'Provide Sale Order Reference on Purchase Order Drop shipment.',
+    'description': """
+    
+    """,
+    #'sequence': '1',
     'author': 'ICTSTUDIO | André Schenkels',
     'website': 'http://www.ictstudio.eu',
+    'images': ['static/description/banner.png'], # 560x280 px.
     'license': 'LGPL-3',
-    'summary': 'Provide Sale Order Reference on Purchase Order Drop shipment',
+    'contributor': '',
+    'maintainer': 'Vertel AB',
+    'repository': 'https://github.com/vertelab/odoo-purchase',
+    # Any module necessary for this one to work correctly
+    
     'depends': ['purchase_stock'],
     'data': [
         'views/res_config_settings_views.xml'
