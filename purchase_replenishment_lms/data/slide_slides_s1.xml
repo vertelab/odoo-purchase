@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+    <!-- SEKTION 1: Påfyllnadsregeln — Min, Max och Multiple -->
+
+    <record id="slide_category_s1" model="slide.slide">
+        <field name="name">1. Påfyllnadsregeln — Min, Max och Multiple</field>
+        <field name="is_category" eval="True"/>
+        <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
+        <field name="sequence">0</field>
+    </record>
+
+    <record id="slide_s1_01" model="slide.slide">
+        <field name="name">Vad är en påfyllnadsregel?</field>
+        <field name="sequence">10</field>
+        <field name="slide_category">article</field>
+        <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
+        <field name="is_published" eval="True"/>
+        <field name="is_preview" eval="True"/>
+        <field name="completion_time">0.25</field>
+        <field name="html_content" type="html">
+<section class="s_cover parallax o_cc o_cc5 pt200 pb200" data-scroll-background-ratio="1">
+    <span class="s_parallax_bg oe_img_bg" style="background-color: #1a365d;"/>
+    <div class="container">
+        <h1 class="display-3-fs" style="text-align: center;">Påfyllnadsregeln</h1>
+        <p class="lead" style="text-align: center;">Minimum Inventory Rule — <em>stock.warehouse.orderpoint</em>.</p>
+    </div>
+</section>
+
+<section class="s_text_block pt64 pb40">
+    <div class="container s_allow_columns">
+        <h2>En regel per produkt och lagerplats</h2>
+        <p>En <strong>påfyllnadsregel</strong> säger till Odoo: <em>när prognosen för den här
+        produkten på den här lagerplatsen faller under en viss nivå, skapa ett inköpsförslag</em>.</p>
+        <table class="table table-bordered">
+            <tr><th>Fält</th><th>Betydelse</th></tr>
+            <tr><td><strong>Min Quantity</strong></td><td>Tröskeln. Faller prognosen <em>under</em> Min triggar regeln.</td></tr>
+            <tr><td><strong>Max Quantity</strong></td><td>Lagringstak — eller samma som Min för "fyll upp till Min".</td></tr>
+            <tr><td><strong>Multiple Quantity</strong></td><td>Förpackningsstorlek. Ordern avrundas till en multipel.</td></tr>
+        </table>
+        <p>Du hittar reglerna under <strong>Inventory ▸ Operations ▸ Replenishment</strong>.</p>
+    </div>
+</section>
+
+<section class="s_alert s_alert_warning pt32 pb48">
+    <div class="container">
+        <h3>Odoo 18 förbjuder Min &gt; Max</h3>
+        <p>Det finns en constraint (<code>_check_min_max_qty</code>) som inte fanns i v16 eller v17.
+        <strong>Max = 0 tillsammans med Min &gt; 0 är därför ogiltigt i v18</strong> — regeln går inte
+        att spara eller redigera. Se sektion 4 för vad du gör i stället.</p>
+    </div>
+</section>
+        </field>
+        <field name="description">Introduktion till påfyllnadsregeln (stock.warehouse.orderpoint): Min, Max och Multiple — och att Odoo 18 förbjuder Min > Max.</field>
+    </record>
+
+    <record id="slide_s1_02" model="slide.slide">
+        <field name="name">Formeln och tumregeln för Odoo 18</field>
+        <field name="sequence">20</field>
+        <field name="slide_category">article</field>
+        <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
+        <field name="is_published" eval="True"/>
+        <field name="is_preview" eval="True"/>
+        <field name="completion_time">0.33</field>
+        <field name="html_content" type="html">
+<section class="s_text_block pt64 pb40">
+    <div class="container s_allow_columns">
+        <h2>Formeln</h2>
+        <pre>To Order = max(Min, Max) − Virtual Available</pre>
+        <p>Regeln triggar <strong>endast</strong> när prognosen faller <em>strikt under</em> Min.
+        Är prognosen lika med Min händer ingenting.</p>
+    </div>
+</section>
+
+<section class="s_text_block pt40 pb64">
+    <div class="container s_allow_columns">
+        <h2>Tumregeln för Odoo 18</h2>
+        <table class="table table-bordered">
+            <tr><th>Vill du...</th><th>Min</th><th>Max</th><th>Multiple</th></tr>
+            <tr><td>Alltid 1 hemma, köp 1 när den sålts</td><td><strong>1</strong></td><td><strong>1</strong></td><td>1</td></tr>
+            <tr><td>Fyll på till 3</td><td><strong>3</strong></td><td><strong>3</strong></td><td>1</td></tr>
+            <tr><td>Köp i 12-pack, håll minst 12</td><td><strong>12</strong></td><td><strong>23</strong></td><td>12</td></tr>
+            <tr><td>Köp i 30-pack, håll minst 60</td><td><strong>60</strong></td><td><strong>89</strong></td><td>30</td></tr>
+        </table>
+        <p><strong>Max = Min + Multiple − 1</strong> när Multiple &gt; 1, annars <strong>Max = Min</strong>.</p>
+        <p>Med Max = Min + Multiple − 1 ligger råkvantiteten en enhet under nästa multipel, så v18:s
+        avrundning nedåt landar på exakt en multipel — samma kvantitet som Max = 0 uppnådde genom att
+        runda uppåt.</p>
+    </div>
+</section>
+
+<section class="s_call_to_action o_cc o_cc5 pt48 pb48">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9">
+                <h3>Varför inte bara sätta Max = Min?</h3>
+                <p class="lead">Då tappar du triggern. Med Min = 12 och Max = 12 beställs ingenting förrän
+                hyllan är helt tom — precis det beteende du ville undvika.</p>
+            </div>
+        </div>
+    </div>
+</section>
+        </field>
+        <field name="description">To Order-formeln, tumregeln Max = Min + Multiple − 1, och varför Max = Min tappar triggern.</field>
+    </record>
+
+    <record id="slide_s1_03" model="slide.slide">
+        <field name="name">De tre parametrarna — översikt</field>
+        <field name="sequence">30</field>
+        <field name="slide_category">infographic</field>
+        <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
+        <field name="is_published" eval="True"/>
+        <field name="is_preview" eval="True"/>
+        <field name="completion_time">0.1</field>
+        <field name="image_1920" type="base64" file="purchase_replenishment_lms/static/src/img/diagram_params.png"/>
+        <field name="description">Infografik: Min (tröskel), Max (lagringstak) och Multiple (förpackning).</field>
+    </record>
+
+    <record id="slide_s1_04" model="slide.slide">
+        <field name="name">🧪 Testa dina kunskaper — Påfyllnadsregeln</field>
+        <field name="sequence">40</field>
+        <field name="slide_category">quiz</field>
+        <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
+        <field name="is_published" eval="True"/>
+        <field name="is_preview" eval="False"/>
+        <field name="completion_time">0.25</field>
+        <field name="quiz_first_attempt_reward">100</field>
+        <field name="quiz_second_attempt_reward">75</field>
+        <field name="quiz_third_attempt_reward">50</field>
+        <field name="quiz_fourth_attempt_reward">25</field>
+        <field name="description">Testa dina kunskaper om Min, Max, Multiple och tumregeln.</field>
+    </record>
+
+    <record id="slide_s1_04_q1" model="slide.question">
+        <field name="question">Vad styr om en påfyllnadsregel triggar?</field>
+        <field name="sequence">1</field>
+        <field name="slide_id" ref="slide_s1_04"/>
+    </record>
+
+    <record id="slide_s1_04_q1_a1" model="slide.answer">
+        <field name="text_value">Prognosen faller strikt under Min</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Correct! Villkoret är qty_forecast &lt; product_min_qty. Lika med Min räcker inte.</field>
+        <field name="question_id" ref="slide_s1_04_q1"/>
+    </record>
+
+    <record id="slide_s1_04_q1_a2" model="slide.answer">
+        <field name="text_value">Lagersaldot (On Hand) är noll</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect! Det är prognosen som jämförs, inte lagersaldot.</field>
+        <field name="question_id" ref="slide_s1_04_q1"/>
+    </record>
+
+    <record id="slide_s1_04_q1_a3" model="slide.answer">
+        <field name="text_value">Max är satt till 0</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect! Max = 0 är ogiltigt i v18 och styr inte triggern.</field>
+        <field name="question_id" ref="slide_s1_04_q1"/>
+    </record>
+
+    <record id="slide_s1_04_q2" model="slide.question">
+        <field name="question">Du vill köpa i 12-pack och hålla minst 12. Vad sätter du?</field>
+        <field name="sequence">2</field>
+        <field name="slide_id" ref="slide_s1_04"/>
+    </record>
+
+    <record id="slide_s1_04_q2_a1" model="slide.answer">
+        <field name="text_value">Min = 12, Max = 23, Multiple = 12</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Correct! Max = Min + Multiple − 1 = 12 + 12 − 1 = 23.</field>
+        <field name="question_id" ref="slide_s1_04_q2"/>
+    </record>
+
+    <record id="slide_s1_04_q2_a2" model="slide.answer">
+        <field name="text_value">Min = 12, Max = 0, Multiple = 12</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect! Max = 0 med Min &gt; 0 är ogiltigt i Odoo 18 — regeln går inte att spara.</field>
+        <field name="question_id" ref="slide_s1_04_q2"/>
+    </record>
+
+    <record id="slide_s1_04_q2_a3" model="slide.answer">
+        <field name="text_value">Min = 12, Max = 12, Multiple = 12</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect! Då tappar du triggern — inget beställs förrän hyllan är tom.</field>
+        <field name="question_id" ref="slide_s1_04_q2"/>
+    </record>
+
+    <record id="slide_s1_04_q3" model="slide.question">
+        <field name="question">Varför är Max = Min + Multiple ett sämre val än Max = Min + Multiple − 1?</field>
+        <field name="sequence">3</field>
+        <field name="slide_id" ref="slide_s1_04"/>
+    </record>
+
+    <record id="slide_s1_04_q3_a1" model="slide.answer">
+        <field name="text_value">Det ger överköp med en hel multipel</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Correct! Med Min = 12 och Multiple = 12 beställer Max = 24 hela 24 st i stället för 12.</field>
+        <field name="question_id" ref="slide_s1_04_q3"/>
+    </record>
+
+    <record id="slide_s1_04_q3_a2" model="slide.answer">
+        <field name="text_value">Det är ogiltigt i Odoo 18</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect! Det är giltigt — men ger fel kvantitet.</field>
+        <field name="question_id" ref="slide_s1_04_q3"/>
+    </record>
+
+    <record id="slide_s1_04_q3_a3" model="slide.answer">
+        <field name="text_value">Det triggar aldrig</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect! Triggern beror på Min, inte på Max.</field>
+        <field name="question_id" ref="slide_s1_04_q3"/>
+    </record>
+
+    </data>
+</odoo>

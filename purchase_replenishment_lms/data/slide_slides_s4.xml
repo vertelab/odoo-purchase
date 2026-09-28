@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+    <!-- SEKTION 4: Max = 0 — och varför det inte längre fungerar -->
+
+    <record id="slide_category_s4" model="slide.slide">
+        <field name="name">4. Max = 0 — och varför det inte längre fungerar</field>
+        <field name="is_category" eval="True"/>
+        <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
+        <field name="sequence">150</field>
+    </record>
+
+    <record id="slide_s4_01" model="slide.slide">
+        <field name="name">Bakgrunden och constrainten</field>
+        <field name="sequence">160</field>
+        <field name="slide_category">article</field>
+        <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
+        <field name="is_published" eval="True"/>
+        <field name="is_preview" eval="False"/>
+        <field name="completion_time">0.33</field>
+        <field name="html_content" type="html">
+<section class="s_cover parallax o_cc o_cc5 pt200 pb200" data-scroll-background-ratio="1">
+    <span class="s_parallax_bg oe_img_bg" style="background-color: #742a2a;"/>
+    <div class="container">
+        <h1 class="display-3-fs" style="text-align: center;">Max = 0 — och varför det inte längre fungerar</h1>
+        <p class="lead" style="text-align: center;">Odoo 18 förbjuder Min &gt; Max. Så här migrerar du utan att ändra kvantiteterna.</p>
+    </div>
+</section>
+
+<section class="s_text_block pt64 pb40">
+    <div class="container s_allow_columns">
+        <h2>Bakgrunden</h2>
+        <p><strong>Max = 0</strong> var den dokumenterade modellen i Odoo 16 och fungerade där:
+        <code>max(Min, 0) = Min</code>, och avrundningen skedde alltid uppåt. Odoo 18 återställde
+        det beteendet (v17 hade en regression där Max = 0 gav noll).</p>
+        <p>Problemet är inte semantiken — det är att <strong>Odoo 18 samtidigt införde en constraint
+        som förbjuder Min &gt; Max</strong>. Med Min = 60 och Max = 0 är regeln ogiltig.</p>
+    </div>
+</section>
+
+<section class="s_text_block pt40 pb64">
+    <div class="container s_allow_columns">
+        <h2>Constrainten</h2>
+        <pre>@api.constrains('product_min_qty', 'product_max_qty')
+def _check_min_max_qty(self):
+    if any(op.product_min_qty > op.product_max_qty for op in self):
+        raise ValidationError('The minimum quantity must be less than
+                               or equal to the maximum quantity.')</pre>
+        <p>Den finns <strong>inte</strong> i v16 eller v17. Den körs bara vid <code>create</code> och
+        <code>write</code> — därför överlevde befintliga regler uppgraderingen, men de kan inte längre
+        redigeras.</p>
+    </div>
+</section>
+
+<section class="s_alert s_alert_warning pt32 pb48">
+    <div class="container">
+        <h3>Den tysta fällan</h3>
+        <p><code>_compute_product_max_qty</code> innehåller <code>if max &lt; min or not max: max = min</code>.
+        Skriver du ett nytt <strong>Min</strong> på en Max = 0-regel kastas inget fel — Max sätts
+        <em>tyst</em> till Min, och regeln byter i smyg från "runda uppåt" till "runda nedåt".
+        Kvantiteterna blir fel utan varning.</p>
+    </div>
+</section>
+        </field>
+        <field name="description">Max = 0 fungerade i v16 och i v18:s semantik — men Odoo 18 förbjuder Min > Max via _check_min_max_qty. Den tysta fällan i _compute_product_max_qty.</field>
+    </record>
+
+    <record id="slide_s4_02" model="slide.slide">
+        <field name="name">Varför Min = Max inte är rätt — och migreringen</field>
+        <field name="sequence">170</field>
+        <field name="slide_category">article</field>
+        <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
+        <field name="is_published" eval="True"/>
+        <field name="is_preview" eval="False"/>
+        <field name="completion_time">0.33</field>
+        <field name="html_content" type="html">
+<section class="s_text_block pt64 pb40">
+    <div class="container s_allow_columns">
+        <h2>Varför Min = Max inte är rätt ersättare</h2>
+        <p>Den uppenbara lösningen — sätta Max = Min — <strong>tappar triggern</strong>.
+        Exempel med Min = 12 och Multiple = 12:</p>
+        <table class="table table-bordered">
+            <tr><th>Konfiguration</th><th>fc = 12</th><th>fc = 11</th><th>fc = 6</th><th>fc = 0</th><th>fc = −5</th></tr>
+            <tr><td>Max = 0 (legacy)</td><td>0</td><td>12</td><td>12</td><td>12</td><td>24</td></tr>
+            <tr><td>Max = Min (12)</td><td>0</td><td><strong>0</strong></td><td><strong>0</strong></td><td>12</td><td>12</td></tr>
+            <tr><td><strong>Max = Min + Multiple − 1 (23)</strong></td><td>0</td><td><strong>12</strong></td><td><strong>12</strong></td><td><strong>12</strong></td><td><strong>24</strong></td></tr>
+            <tr><td>Max = Min + Multiple (24)</td><td>0</td><td>12</td><td>12</td><td><strong>24</strong></td><td>24</td></tr>
+        </table>
+        <p>Läs raden <strong>Max = Min</strong>: när en sålts (fc = 11) beställs ingenting — den fyller
+        bara på när hyllan är helt tom. Det var precis det beteendet du ville undvika.</p>
+        <p>Läs raden <strong>Max = Min + Multiple</strong> (den gamla onchange-formeln): vid fc = 0
+        beställs 24 i stället för 12 — överköp med en hel multipel.</p>
+        <p>Bara <strong>Max = Min + Multiple − 1</strong> ger identiskt resultat med legacy Max = 0
+        i samtliga fall.</p>
+    </div>
+</section>
+
+<section class="s_text_block pt40 pb64">
+    <div class="container s_allow_columns">
+        <h2>Migrering</h2>
+        <p>Modulen <code>sfa_orderpoint_max_zero_fix</code> skriver om Max så regeln blir giltig i v18
+        <em>utan att ändra påfyllnadskvantiteten</em>:</p>
+        <pre>Max = Min + Multiple − 1   (Min när Multiple ≤ 1)</pre>
+        <p>Verifierat uttömmande: 616/616 kombinationer av Min × Multiple × prognos ger identiskt
+        resultat före och efter.</p>
+        <p>I <strong>Inventory ▸ Operations ▸ Replenishment</strong> finns två knappar i listhuvudet:</p>
+        <ul>
+            <li><strong>Preview Max=0 fix</strong> — torrkörning, visar vad som skulle ändras utan att skriva.</li>
+            <li><strong>Fix Max=0 rules (v18)</strong> — utför migreringen.</li>
+        </ul>
+        <p>Idempotent och säker att köra om. Endast regler med Min &gt; Max rörs — redan giltiga regler
+        lämnas orörda.</p>
+    </div>
+</section>
+        </field>
+        <field name="description">Jämförelsetabell över Max = 0, Max = Min, Max = Min + Multiple − 1 och Max = Min + Multiple. Migreringsmodulen sfa_orderpoint_max_zero_fix.</field>
+    </record>
+
+    <record id="slide_s4_03" model="slide.slide">
+        <field name="name">Constrainten och fixen — flödesschema</field>
+        <field name="sequence">180</field>
+        <field name="slide_category">infographic</field>
+        <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
+        <field name="is_published" eval="True"/>
+        <field name="is_preview" eval="False"/>
+        <field name="completion_time">0.15</field>
+        <field name="image_1920" type="base64" file="purchase_replenishment_lms/static/src/img/diagram_constraint.png"/>
+        <field name="description">Flödesschema: vad som händer när en Max = 0-regel läses, redigeras eller får nytt Min — och hur migreringen löser det.</field>
+    </record>
+
+    <record id="slide_s4_04" model="slide.slide">
+        <field name="name">🧪 Testa dina kunskaper — Max = 0</field>
+        <field name="sequence">190</field>
+        <field name="slide_category">quiz</field>
+        <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
+        <field name="is_published" eval="True"/>
+        <field name="is_preview" eval="False"/>
+        <field name="completion_time">0.25</field>
+        <field name="quiz_first_attempt_reward">100</field>
+        <field name="quiz_second_attempt_reward">75</field>
+        <field name="quiz_third_attempt_reward">50</field>
+        <field name="quiz_fourth_attempt_reward">25</field>
+        <field name="description">Testa dina kunskaper om constrainten, den tysta fällan och migreringen.</field>
+    </record>
+
+    <record id="slide_s4_04_q1" model="slide.question">
+        <field name="question">Varför kan en regel med Min = 60 och Max = 0 inte redigeras i Odoo 18?</field>
+        <field name="sequence">1</field>
+        <field name="slide_id" ref="slide_s4_04"/>
+    </record>
+
+    <record id="slide_s4_04_q1_a1" model="slide.answer">
+        <field name="text_value">Constrainten _check_min_max_qty förbjuder Min > Max</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Correct! Constrainten finns bara i v18 och körs vid create/write.</field>
+        <field name="question_id" ref="slide_s4_04_q1"/>
+    </record>
+
+    <record id="slide_s4_04_q1_a2" model="slide.answer">
+        <field name="text_value">Max = 0 är borttaget som fältvärde</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect! Fältet accepterar 0 — det är kombinationen som är ogiltig.</field>
+        <field name="question_id" ref="slide_s4_04_q1"/>
+    </record>
+
+    <record id="slide_s4_04_q1_a3" model="slide.answer">
+        <field name="text_value">Regeln är arkiverad</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect! Den är aktiv men ogiltig.</field>
+        <field name="question_id" ref="slide_s4_04_q1"/>
+    </record>
+
+    <record id="slide_s4_04_q2" model="slide.question">
+        <field name="question">Du sätter ett nytt Min på en Max = 0-regel. Vad händer?</field>
+        <field name="sequence">2</field>
+        <field name="slide_id" ref="slide_s4_04"/>
+    </record>
+
+    <record id="slide_s4_04_q2_a1" model="slide.answer">
+        <field name="text_value">Max sätts tyst till Min — regeln byter semantik utan varning</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Correct! _compute_product_max_qty gör det utan att kasta något fel.</field>
+        <field name="question_id" ref="slide_s4_04_q2"/>
+    </record>
+
+    <record id="slide_s4_04_q2_a2" model="slide.answer">
+        <field name="text_value">Du får ett ValidationError</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect! Inget fel kastas — det är just det som är farligt.</field>
+        <field name="question_id" ref="slide_s4_04_q2"/>
+    </record>
+
+    <record id="slide_s4_04_q2_a3" model="slide.answer">
+        <field name="text_value">Ingenting — Max förblir 0</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect! Max skrivs om till Min.</field>
+        <field name="question_id" ref="slide_s4_04_q2"/>
+    </record>
+
+    <record id="slide_s4_04_q3" model="slide.question">
+        <field name="question">Vilken ersättare ger exakt samma påfyllnadskvantitet som Max = 0?</field>
+        <field name="sequence">3</field>
+        <field name="slide_id" ref="slide_s4_04"/>
+    </record>
+
+    <record id="slide_s4_04_q3_a1" model="slide.answer">
+        <field name="text_value">Max = Min + Multiple − 1</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Correct! Verifierat på 616/616 kombinationer — identiskt resultat.</field>
+        <field name="question_id" ref="slide_s4_04_q3"/>
+    </record>
+
+    <record id="slide_s4_04_q3_a2" model="slide.answer">
+        <field name="text_value">Max = Min</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect! Då tappar du triggern — inget beställs förrän hyllan är tom.</field>
+        <field name="question_id" ref="slide_s4_04_q3"/>
+    </record>
+
+    <record id="slide_s4_04_q3_a3" model="slide.answer">
+        <field name="text_value">Max = Min + Multiple</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect! Det ger överköp med en hel multipel.</field>
+        <field name="question_id" ref="slide_s4_04_q3"/>
+    </record>
+
+    </data>
+</odoo>
