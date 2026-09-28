@@ -3,7 +3,7 @@
 
 {
     'name': 'Purchase Replenishment: Training (LMS)',
-    'version': '18.0.2.0.1',
+    'version': '18.0.3.0.0',
     'summary': 'eLearning course on purchase proposals and reordering rules',
     'category': 'Purchase/Training',
     'author': 'Vertel Sverige AB',
@@ -22,6 +22,7 @@ rules (stock.warehouse.orderpoint):
 - Section 2: How the replenishment proposal is calculated
 - Section 3: Order Deadline vs Expected Arrival
 - Section 4: Max = 0 — why it is no longer valid in v18, and how to migrate
+- Section 5: Case study — Sanicom 1 (why 72 was proposed when 94 was incoming)
 
 Section 4 covers the v18 constraint that forbids Min > Max, the silent
 semantics switch in _compute_product_max_qty, and the migration rule
@@ -38,6 +39,7 @@ Includes Mermaid-generated diagrams and Odoo page builder articles.
         'data/slide_slides_s2.xml',
         'data/slide_slides_s3.xml',
         'data/slide_slides_s4.xml',
+        'data/slide_slides_s5.xml',
     ],
     'installable': True,
     'application': False,

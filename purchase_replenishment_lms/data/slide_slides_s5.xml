@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+    <!-- SEKTION 5: Fallstudie — Sanicom 1 -->
+
+    <record id="slide_category_s5" model="slide.slide">
+        <field name="name">5. Fallstudie — Sanicom 1</field>
+        <field name="is_category" eval="True"/>
+        <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
+        <field name="sequence">200</field>
+    </record>
+
+    <record id="slide_s5_01" model="slide.slide">
+        <field name="name">Underlaget och varför 72 st</field>
+        <field name="sequence">210</field>
+        <field name="slide_category">article</field>
+        <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
+        <field name="is_published" eval="True"/>
+        <field name="is_preview" eval="False"/>
+        <field name="completion_time">0.33</field>
+        <field name="html_content" type="html">
+<section class="s_cover parallax o_cc o_cc5 pt200 pb200" data-scroll-background-ratio="1">
+    <span class="s_parallax_bg oe_img_bg" style="background-color: #553c9a;"/>
+    <div class="container">
+        <h1 class="display-3-fs" style="text-align: center;">Fallstudie: Sanicom 1</h1>
+        <p class="lead" style="text-align: center;">Ett verkligt ärende — 72 st föreslogs trots att 94 var på väg in.</p>
+    </div>
+</section>
+
+<section class="s_text_block pt64 pb40">
+    <div class="container s_allow_columns">
+        <h2>Underlaget</h2>
+        <p>En beställning lades till fabriken kl. 11.30 (P00140). Klockan 13.24 genererade Odoo
+        ett nytt inköpsförslag. Artikeln <strong>Sanicom 1</strong> föreslogs köpas in i
+        <strong>72 st</strong>.</p>
+        <table class="table table-bordered">
+            <tr><th>Uppgift</th><th>Värde</th></tr>
+            <tr><td>Min kvantitet</td><td>60 st</td></tr>
+            <tr><td>Max kvantitet</td><td>84 st</td></tr>
+            <tr><td>Hemma (On Hand)</td><td>4 st</td></tr>
+            <tr><td>I kundorder</td><td>6 st</td></tr>
+            <tr><td>På väg in</td><td>94 st</td></tr>
+            <tr><td><strong>Förslag</strong></td><td><strong>72 st</strong></td></tr>
+        </table>
+        <p>Order deadline blev <strong>28/7</strong> och expected arrival <strong>16/9</strong>.</p>
+    </div>
+</section>
+
+<section class="s_text_block pt40 pb64">
+    <div class="container s_allow_columns">
+        <h2>Steg 1 — varför 72 st?</h2>
+        <p>Utgå från formeln och arbeta baklänges:</p>
+        <pre>To Order = max(Min, Max) − prognos
+       72 = max(60, 84) − prognos
+       72 = 84 − prognos
+  prognos = 12</pre>
+        <p><strong>Förslaget på 72 st berättar att prognosen var 12 — inte 92.</strong></p>
+        <p>Lägg märke till att <code>max(60, 84) = 84</code>. Hade Max varit 0 (den gamla modellen)
+        skulle formeln ha gett <code>60 − 12 = 48 st</code>. Eftersom förslaget är 72 st är
+        <strong>Max satt till 84</strong> — regeln följer alltså "fyll upp till Max", inte
+        "fyll upp till Min".</p>
+    </div>
+</section>
+
+<section class="s_alert s_alert_warning pt32 pb48">
+    <div class="container">
+        <h3>Nyckeln: prognosen var 12, inte 92</h3>
+        <p>Med 4 hemma, 94 på väg in och 6 i kundorder <em>borde</em> prognosen ha varit
+        <code>4 + 94 − 6 = 92</code> — och då hade regeln inte triggat alls (92 är inte under 60).</p>
+        <p>Att Odoo ändå såg ett behov betyder att <strong>de 94 inte räknades in i prognosen</strong>
+        vid körningen. Det är den fråga som måste besvaras.</p>
+    </div>
+</section>
+        </field>
+        <field name="description">Fallstudie: Sanicom 1 med Min 60, Max 84, 4 hemma, 94 på väg in, 6 i kundorder — och ett förslag på 72 st. Räkna baklänges från formeln.</field>
+    </record>
+
+    <record id="slide_s5_02" model="slide.slide">
+        <field name="name">Varför räknades inte de 94 in?</field>
+        <field name="sequence">220</field>
+        <field name="slide_category">article</field>
+        <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
+        <field name="is_published" eval="True"/>
+        <field name="is_preview" eval="False"/>
+        <field name="completion_time">0.33</field>
+        <field name="html_content" type="html">
+<section class="s_text_block pt64 pb40">
+    <div class="container s_allow_columns">
+        <h2>Steg 2 — varför räknades inte de 94 in?</h2>
+        <p>Prognosen (<code>virtual_available</code>) byggs av <em>bekräftade</em> lagerrörelser
+        på <em>den aktuella lagerplatsen</em>. Faller något av följande bort försvinner de 94 ur
+        beräkningen:</p>
+        <table class="table table-bordered">
+            <tr><th>Orsak</th><th>Vad du ser</th><th>Åtgärd</th></tr>
+            <tr>
+                <td>Inleveransen är inte bekräftad</td>
+                <td>Inköpsraden står i <em>RFQ</em>/utkast — ingen väntande lagerrörelse finns</td>
+                <td>Bekräfta inköpsordern</td>
+            </tr>
+            <tr>
+                <td>Annan lagerplats</td>
+                <td>Inleveransen går till en annan plats än regelns</td>
+                <td>Rätta lagerplatsen på regeln eller ordern</td>
+            </tr>
+            <tr>
+                <td>Annan produkt/variant</td>
+                <td>De 94 avser en variant som inte matchar regelns produkt</td>
+                <td>Kontrollera variantkopplingen</td>
+            </tr>
+            <tr>
+                <td>Leveransdatum utanför prognosfönstret</td>
+                <td>Inleveransen ligger efter ledtidsdatumet</td>
+                <td>Se över leverantörens ledtid / Visibility Days</td>
+            </tr>
+            <tr>
+                <td>Förslaget skapades <em>före</em> ordern registrerades</td>
+                <td>Tidsstämplar: förslaget 13.24, ordern 11.30</td>
+                <td>Kontrollera ordningen i chatter/logg</td>
+            </tr>
+        </table>
+    </div>
+</section>
+
+<section class="s_text_block pt40 pb64">
+    <div class="container s_allow_columns">
+        <h2>Steg 3 — varför just dessa datum?</h2>
+        <p>Order deadline <strong>28/7</strong> och expected arrival <strong>16/9</strong> ligger
+        <strong>50 dagar</strong> isär. Det är ingen slump:</p>
+        <pre>expected arrival = order deadline + leverantörens ledtid + säkerhetstid
+          16/9    =      28/7       +        50 dagar        +      0</pre>
+        <p>Leverantörens <strong>Delivery Lead Time</strong> är alltså 50 dagar. Datumen är inte
+        felräknade — de beskriver samma ledtid från två håll:</p>
+        <ul>
+            <li><strong>Order deadline 28/7</strong> — när ordern måste läggas för att hinna fram.</li>
+            <li><strong>Expected arrival 16/9</strong> — när varan beräknas vara på plats.</li>
+        </ul>
+        <p class="small text-muted">28/7 är dessutom i det förflutna om beställningen gjordes i september —
+        vilket i sig är en signal: order deadline sätts till planeringsdagen, och ett passerat datum
+        betyder att behovet redan är akut enligt Odoos beräkning.</p>
+    </div>
+</section>
+
+<section class="s_text_block pt40 pb64">
+    <div class="container s_allow_columns">
+        <h2>Steg 4 — vad gör du åt det?</h2>
+        <ol>
+            <li><strong>Verifiera prognosen</strong> i Replenishment-rapporten: stämmer Forecast med
+            <code>4 + 94 − 6 = 92</code>? Om inte — gå igenom tabellen i steg 2.</li>
+            <li><strong>Kontrollera om de 94 är bekräftade.</strong> En obekräftad inköpsrad syns
+            inte i prognosen. Detta är den vanligaste orsaken.</li>
+            <li><strong>Se över Max.</strong> Med Max = 84 fyller regeln upp till 84 i stället för till
+            Min = 60. Enligt tumregeln bör Max vara <code>Min + Multiple − 1</code>.</li>
+            <li><strong>Se över leverantörens min_qty.</strong> Är den satt högre än behovet tvingar
+            den upp ordern oavsett Min/Max.</li>
+            <li><strong>Om inget behov finns:</strong> justera Min så prognosen inte faller under den,
+            eller arkivera regeln tillfälligt.</li>
+        </ol>
+    </div>
+</section>
+
+<section class="s_call_to_action o_cc o_cc5 pt48 pb48">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9">
+                <h3>Sammanfattning av fallet</h3>
+                <p class="lead">72 st ⇒ prognosen var 12, inte 92 ⇒ de 94 räknades inte in.
+                Datumen 28/7 → 16/9 är 50 dagars leverantörsledtid. Börja alltid med att läsa
+                prognosen — den berättar vad Odoo faktiskt såg.</p>
+            </div>
+        </div>
+    </div>
+</section>
+        </field>
+        <field name="description">Fem orsaker till att inkommande kvantitet faller utanför prognosen — obekräftad inleverans, annan lagerplats, annan variant, utanför prognosfönstret, eller skapad före ordern.</field>
+    </record>
+
+    <record id="slide_s5_03" model="slide.slide">
+        <field name="name">Steg 4 — vad du gör åt det</field>
+        <field name="sequence">230</field>
+        <field name="slide_category">article</field>
+        <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
+        <field name="is_published" eval="True"/>
+        <field name="is_preview" eval="False"/>
+        <field name="completion_time">0.25</field>
+        <field name="html_content" type="html">
+<section class="s_text_block pt64 pb40">
+    <div class="container s_allow_columns">
+        <h2>Steg 2 — varför räknades inte de 94 in?</h2>
+        <p>Prognosen (<code>virtual_available</code>) byggs av <em>bekräftade</em> lagerrörelser
+        på <em>den aktuella lagerplatsen</em>. Faller något av följande bort försvinner de 94 ur
+        beräkningen:</p>
+        <table class="table table-bordered">
+            <tr><th>Orsak</th><th>Vad du ser</th><th>Åtgärd</th></tr>
+            <tr>
+                <td>Inleveransen är inte bekräftad</td>
+                <td>Inköpsraden står i <em>RFQ</em>/utkast — ingen väntande lagerrörelse finns</td>
+                <td>Bekräfta inköpsordern</td>
+            </tr>
+            <tr>
+                <td>Annan lagerplats</td>
+                <td>Inleveransen går till en annan plats än regelns</td>
+                <td>Rätta lagerplatsen på regeln eller ordern</td>
+            </tr>
+            <tr>
+                <td>Annan produkt/variant</td>
+                <td>De 94 avser en variant som inte matchar regelns produkt</td>
+                <td>Kontrollera variantkopplingen</td>
+            </tr>
+            <tr>
+                <td>Leveransdatum utanför prognosfönstret</td>
+                <td>Inleveransen ligger efter ledtidsdatumet</td>
+                <td>Se över leverantörens ledtid / Visibility Days</td>
+            </tr>
+            <tr>
+                <td>Förslaget skapades <em>före</em> ordern registrerades</td>
+                <td>Tidsstämplar: förslaget 13.24, ordern 11.30</td>
+                <td>Kontrollera ordningen i chatter/logg</td>
+            </tr>
+        </table>
+    </div>
+</section>
+
+<section class="s_text_block pt40 pb64">
+    <div class="container s_allow_columns">
+        <h2>Steg 3 — varför just dessa datum?</h2>
+        <p>Order deadline <strong>28/7</strong> och expected arrival <strong>16/9</strong> ligger
+        <strong>50 dagar</strong> isär. Det är ingen slump:</p>
+        <pre>expected arrival = order deadline + leverantörens ledtid + säkerhetstid
+          16/9    =      28/7       +        50 dagar        +      0</pre>
+        <p>Leverantörens <strong>Delivery Lead Time</strong> är alltså 50 dagar. Datumen är inte
+        felräknade — de beskriver samma ledtid från två håll:</p>
+        <ul>
+            <li><strong>Order deadline 28/7</strong> — när ordern måste läggas för att hinna fram.</li>
+            <li><strong>Expected arrival 16/9</strong> — när varan beräknas vara på plats.</li>
+        </ul>
+        <p class="small text-muted">28/7 är dessutom i det förflutna om beställningen gjordes i september —
+        vilket i sig är en signal: order deadline sätts till planeringsdagen, och ett passerat datum
+        betyder att behovet redan är akut enligt Odoos beräkning.</p>
+    </div>
+</section>
+
+<section class="s_text_block pt40 pb64">
+    <div class="container s_allow_columns">
+        <h2>Steg 4 — vad gör du åt det?</h2>
+        <ol>
+            <li><strong>Verifiera prognosen</strong> i Replenishment-rapporten: stämmer Forecast med
+            <code>4 + 94 − 6 = 92</code>? Om inte — gå igenom tabellen i steg 2.</li>
+            <li><strong>Kontrollera om de 94 är bekräftade.</strong> En obekräftad inköpsrad syns
+            inte i prognosen. Detta är den vanligaste orsaken.</li>
+            <li><strong>Se över Max.</strong> Med Max = 84 fyller regeln upp till 84 i stället för till
+            Min = 60. Enligt tumregeln bör Max vara <code>Min + Multiple − 1</code>.</li>
+            <li><strong>Se över leverantörens min_qty.</strong> Är den satt högre än behovet tvingar
+            den upp ordern oavsett Min/Max.</li>
+            <li><strong>Om inget behov finns:</strong> justera Min så prognosen inte faller under den,
+            eller arkivera regeln tillfälligt.</li>
+        </ol>
+    </div>
+</section>
+
+<section class="s_call_to_action o_cc o_cc5 pt48 pb48">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9">
+                <h3>Sammanfattning av fallet</h3>
+                <p class="lead">72 st ⇒ prognosen var 12, inte 92 ⇒ de 94 räknades inte in.
+                Datumen 28/7 → 16/9 är 50 dagars leverantörsledtid. Börja alltid med att läsa
+                prognosen — den berättar vad Odoo faktiskt såg.</p>
+            </div>
+        </div>
+    </div>
+</section>
+        </field>
+        <field name="description">Åtgärdslista för fallet: verifiera prognosen, kontrollera att de 94 är bekräftade, se över Max och leverantörens min_qty.</field>
+    </record>
+
+    <record id="slide_s5_04" model="slide.slide">
+        <field name="name">🧪 Testa dina kunskaper — Fallstudien</field>
+        <field name="sequence">240</field>
+        <field name="slide_category">quiz</field>
+        <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
+        <field name="is_published" eval="True"/>
+        <field name="is_preview" eval="False"/>
+        <field name="completion_time">0.25</field>
+        <field name="quiz_first_attempt_reward">100</field>
+        <field name="quiz_second_attempt_reward">75</field>
+        <field name="quiz_third_attempt_reward">50</field>
+        <field name="quiz_fourth_attempt_reward">25</field>
+        <field name="description">Testa dina kunskaper om Sanicom-fallet: räkna baklänges från förslaget och tolka datumen.</field>
+    </record>
+
+    <record id="slide_s5_04_q1" model="slide.question">
+        <field name="question">Förslaget är 72 st, Min = 60 och Max = 84. Vad var prognosen?</field>
+        <field name="sequence">1</field>
+        <field name="slide_id" ref="slide_s5_04"/>
+    </record>
+
+    <record id="slide_s5_04_q1_a1" model="slide.answer">
+        <field name="text_value">12</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Correct! 72 = max(60,84) − prognos = 84 − prognos ⇒ prognos = 12.</field>
+        <field name="question_id" ref="slide_s5_04_q1"/>
+    </record>
+
+    <record id="slide_s5_04_q1_a2" model="slide.answer">
+        <field name="text_value">92</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect! 84 − 92 = −8, inte 72. Med prognos 92 hade regeln inte triggat.</field>
+        <field name="question_id" ref="slide_s5_04_q1"/>
+    </record>
+
+    <record id="slide_s5_04_q1_a3" model="slide.answer">
+        <field name="text_value">−12</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect! 84 − (−12) = 96, inte 72.</field>
+        <field name="question_id" ref="slide_s5_04_q1"/>
+    </record>
+
+    <record id="slide_s5_04_q2" model="slide.question">
+        <field name="question">Du har 4 hemma, 94 på väg in och 6 i kundorder. Varför såg Odoo ändå ett behov?</field>
+        <field name="sequence">2</field>
+        <field name="slide_id" ref="slide_s5_04"/>
+    </record>
+
+    <record id="slide_s5_04_q2_a1" model="slide.answer">
+        <field name="text_value">De 94 räknades inte in i prognosen vid körningen</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Correct! Vanligaste orsaken är att inleveransen inte är bekräftad, eller ligger på en annan lagerplats.</field>
+        <field name="question_id" ref="slide_s5_04_q2"/>
+    </record>
+
+    <record id="slide_s5_04_q2_a2" model="slide.answer">
+        <field name="text_value">Odoo räknar alltid bort inkommande leveranser</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect! Bekräftade inleveranser ligger i prognosen — det är därför regeln normalt inte triggar.</field>
+        <field name="question_id" ref="slide_s5_04_q2"/>
+    </record>
+
+    <record id="slide_s5_04_q2_a3" model="slide.answer">
+        <field name="text_value">Min var satt till 0</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect! Min är 60 — och med Min = 0 hade regeln aldrig triggat.</field>
+        <field name="question_id" ref="slide_s5_04_q2"/>
+    </record>
+
+    <record id="slide_s5_04_q3" model="slide.question">
+        <field name="question">Order deadline är 28/7 och expected arrival 16/9. Vad berättar det?</field>
+        <field name="sequence">3</field>
+        <field name="slide_id" ref="slide_s5_04"/>
+    </record>
+
+    <record id="slide_s5_04_q3_a1" model="slide.answer">
+        <field name="text_value">Leverantörens ledtid är 50 dagar</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Correct! Expected arrival = order deadline + ledtid + säkerhetstid. 28/7 + 50 dagar = 16/9.</field>
+        <field name="question_id" ref="slide_s5_04_q3"/>
+    </record>
+
+    <record id="slide_s5_04_q3_a2" model="slide.answer">
+        <field name="text_value">Odoo har räknat fel</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect! Datumen är en korrekt framräkning av ledtiden.</field>
+        <field name="question_id" ref="slide_s5_04_q3"/>
+    </record>
+
+    <record id="slide_s5_04_q3_a3" model="slide.answer">
+        <field name="text_value">Ordern är försenad med 50 dagar</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect! Ordern är ett förslag; datumen beskriver ledtiden.</field>
+        <field name="question_id" ref="slide_s5_04_q3"/>
+    </record>
+
+    </data>
+</odoo>
