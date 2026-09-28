@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo noupdate="1">
+<odoo>
+    <data noupdate="1">
 
     <!-- SEKTION 3: Order Deadline vs Expected Arrival -->
 
     <record id="slide_category_s3" model="slide.slide">
         <field name="name">3. Order Deadline vs Expected Arrival</field>
         <field name="is_category" eval="True"/>
+        <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
         <field name="sequence">100</field>
     </record>
 
@@ -13,11 +15,11 @@
         <field name="name">Order Deadline (date_order)</field>
         <field name="sequence">110</field>
         <field name="slide_category">article</field>
+        <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
         <field name="is_published" eval="True"/>
         <field name="is_preview" eval="False"/>
         <field name="completion_time">0.25</field>
         <field name="html_content" type="html">
-<![CDATA[
 <section class="s_cover parallax o_cc o_cc5 pt200 pb200" data-scroll-background-ratio="1">
     <span class="s_parallax_bg oe_img_bg" style="background-color: #2f855a;"/>
     <div class="container">
@@ -55,7 +57,6 @@
         Mellanskillnaden är leverantörens ledtid plus säkerhetstiden — inte ett fel.</p>
     </div>
 </section>
-]]>
         </field>
         <field name="description">Order Deadline är när ordern ska läggas. På ett inköpsförslag från en påfyllnadsregel sätts det till planeringsdagen.</field>
     </record>
@@ -64,11 +65,11 @@
         <field name="name">Expected Arrival (date_planned)</field>
         <field name="sequence">120</field>
         <field name="slide_category">article</field>
+        <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
         <field name="is_published" eval="True"/>
         <field name="is_preview" eval="False"/>
         <field name="completion_time">0.33</field>
         <field name="html_content" type="html">
-<![CDATA[
 <section class="s_text_block pt64 pb40">
     <div class="container s_allow_columns">
         <h2>Räkneexempel</h2>
@@ -96,7 +97,6 @@
         <p class="small text-muted">Fälten syns bara när modulerna <code>purchase_stock</code> och <code>stock</code> är installerade.</p>
     </div>
 </section>
-]]>
         </field>
         <field name="description">Expected Arrival = Order Deadline + leverantörens ledtid + säkerhetstid. Räkneexempel med 50 dagars ledtid.</field>
     </record>
@@ -105,6 +105,7 @@
         <field name="name">Tidslinjen för ett inköpsförslag</field>
         <field name="sequence">130</field>
         <field name="slide_category">infographic</field>
+        <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
         <field name="is_published" eval="True"/>
         <field name="is_preview" eval="False"/>
         <field name="completion_time">0.1</field>
@@ -116,6 +117,7 @@
         <field name="name">🧪 Testa dina kunskaper — Datumen</field>
         <field name="sequence">140</field>
         <field name="slide_category">quiz</field>
+        <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
         <field name="is_published" eval="True"/>
         <field name="is_preview" eval="False"/>
         <field name="completion_time">0.25</field>
@@ -129,6 +131,7 @@
     <record id="slide_s3_04_q1" model="slide.question">
         <field name="question">Vad betyder ett Expected Arrival som ligger långt fram i tiden?</field>
         <field name="sequence">1</field>
+        <field name="slide_id" ref="slide_s3_04"/>
     </record>
 
     <record id="slide_s3_04_q1_a1" model="slide.answer">
@@ -136,6 +139,7 @@
         <field name="sequence">1</field>
         <field name="is_correct" eval="True"/>
         <field name="comment">Correct! Expected Arrival = Order Deadline + ledtid + säkerhetstid.</field>
+        <field name="question_id" ref="slide_s3_04_q1"/>
     </record>
 
     <record id="slide_s3_04_q1_a2" model="slide.answer">
@@ -143,6 +147,7 @@
         <field name="sequence">2</field>
         <field name="is_correct" eval="False"/>
         <field name="comment">Incorrect! Kontrollera ledtiderna först — de förklarar nästan alltid datumet.</field>
+        <field name="question_id" ref="slide_s3_04_q1"/>
     </record>
 
     <record id="slide_s3_04_q1_a3" model="slide.answer">
@@ -150,11 +155,13 @@
         <field name="sequence">3</field>
         <field name="is_correct" eval="False"/>
         <field name="comment">Incorrect! Ordern är ett förslag; datumet är en framräkning.</field>
+        <field name="question_id" ref="slide_s3_04_q1"/>
     </record>
 
     <record id="slide_s3_04_q2" model="slide.question">
         <field name="question">Vad är Order Deadline när förslaget skapas av en påfyllnadsregel?</field>
         <field name="sequence">2</field>
+        <field name="slide_id" ref="slide_s3_04"/>
     </record>
 
     <record id="slide_s3_04_q2_a1" model="slide.answer">
@@ -162,6 +169,7 @@
         <field name="sequence">1</field>
         <field name="is_correct" eval="True"/>
         <field name="comment">Correct! Behovet finns redan, så ordern ska läggas nu.</field>
+        <field name="question_id" ref="slide_s3_04_q2"/>
     </record>
 
     <record id="slide_s3_04_q2_a2" model="slide.answer">
@@ -169,6 +177,7 @@
         <field name="sequence">2</field>
         <field name="is_correct" eval="False"/>
         <field name="comment">Incorrect! Då vore ledtiden noll.</field>
+        <field name="question_id" ref="slide_s3_04_q2"/>
     </record>
 
     <record id="slide_s3_04_q2_a3" model="slide.answer">
@@ -176,11 +185,13 @@
         <field name="sequence">3</field>
         <field name="is_correct" eval="False"/>
         <field name="comment">Incorrect! Det är inte vad fältet betyder.</field>
+        <field name="question_id" ref="slide_s3_04_q2"/>
     </record>
 
     <record id="slide_s3_04_q3" model="slide.question">
         <field name="question">En order har flera rader med olika date_planned. Vilket datum visas på ordern?</field>
         <field name="sequence">3</field>
+        <field name="slide_id" ref="slide_s3_04"/>
     </record>
 
     <record id="slide_s3_04_q3_a1" model="slide.answer">
@@ -188,6 +199,7 @@
         <field name="sequence">1</field>
         <field name="is_correct" eval="True"/>
         <field name="comment">Correct! date_planned på ordern = min(alla raders date_planned).</field>
+        <field name="question_id" ref="slide_s3_04_q3"/>
     </record>
 
     <record id="slide_s3_04_q3_a2" model="slide.answer">
@@ -195,6 +207,7 @@
         <field name="sequence">2</field>
         <field name="is_correct" eval="False"/>
         <field name="comment">Incorrect! Odoo väljer det tidigaste.</field>
+        <field name="question_id" ref="slide_s3_04_q3"/>
     </record>
 
     <record id="slide_s3_04_q3_a3" model="slide.answer">
@@ -202,6 +215,8 @@
         <field name="sequence">3</field>
         <field name="is_correct" eval="False"/>
         <field name="comment">Incorrect! Inget medelvärde beräknas.</field>
+        <field name="question_id" ref="slide_s3_04_q3"/>
     </record>
 
+    </data>
 </odoo>

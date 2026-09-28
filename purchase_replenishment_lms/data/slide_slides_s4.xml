@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo noupdate="1">
+<odoo>
+    <data noupdate="1">
 
     <!-- SEKTION 4: Felsökning — varför ser förslaget fel ut? -->
 
     <record id="slide_category_s4" model="slide.slide">
         <field name="name">4. Felsökning — varför ser förslaget fel ut?</field>
         <field name="is_category" eval="True"/>
+        <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
         <field name="sequence">150</field>
     </record>
 
@@ -13,11 +15,11 @@
         <field name="name">Felsökning — sex kontroller i ordning</field>
         <field name="sequence">160</field>
         <field name="slide_category">article</field>
+        <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
         <field name="is_published" eval="True"/>
         <field name="is_preview" eval="False"/>
         <field name="completion_time">0.33</field>
         <field name="html_content" type="html">
-<![CDATA[
 <section class="s_cover parallax o_cc o_cc5 pt200 pb200" data-scroll-background-ratio="1">
     <span class="s_parallax_bg oe_img_bg" style="background-color: #742a2a;"/>
     <div class="container">
@@ -98,7 +100,6 @@
         </div>
     </div>
 </section>
-]]>
         </field>
         <field name="description">Metodisk felsökning av ett inköpsförslag: sex kontroller från Min = 0 till Visibility Days.</field>
     </record>
@@ -107,11 +108,11 @@
         <field name="name">Vanliga orsaker och åtgärder</field>
         <field name="sequence">170</field>
         <field name="slide_category">article</field>
+        <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
         <field name="is_published" eval="True"/>
         <field name="is_preview" eval="False"/>
         <field name="completion_time">0.33</field>
         <field name="html_content" type="html">
-<![CDATA[
 <section class="s_text_block pt64 pb40">
     <div class="container s_allow_columns">
         <h2>Vanliga orsaker — och åtgärd</h2>
@@ -201,7 +202,6 @@
         </div>
     </div>
 </section>
-]]>
         </field>
         <field name="description">Tabell över vanliga symptom på ett felaktigt inköpsförslag, deras orsaker och åtgärder — plus vanliga frågor.</field>
     </record>
@@ -210,6 +210,7 @@
         <field name="name">Hela flödet — från prognos till inköpsorder</field>
         <field name="sequence">180</field>
         <field name="slide_category">infographic</field>
+        <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
         <field name="is_published" eval="True"/>
         <field name="is_preview" eval="False"/>
         <field name="completion_time">0.15</field>
@@ -221,6 +222,7 @@
         <field name="name">🧪 Testa dina kunskaper — Felsökning</field>
         <field name="sequence">190</field>
         <field name="slide_category">quiz</field>
+        <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
         <field name="is_published" eval="True"/>
         <field name="is_preview" eval="False"/>
         <field name="completion_time">0.25</field>
@@ -234,6 +236,7 @@
     <record id="slide_s4_04_q1" model="slide.question">
         <field name="question">En regel har Min = 60, Max = 84, Multiple = 1. Prognosen är 92. Vad händer?</field>
         <field name="sequence">1</field>
+        <field name="slide_id" ref="slide_s4_04"/>
     </record>
 
     <record id="slide_s4_04_q1_a1" model="slide.answer">
@@ -241,6 +244,7 @@
         <field name="sequence">1</field>
         <field name="is_correct" eval="True"/>
         <field name="comment">Correct! 92 är inte mindre än 60, så regeln triggar inte.</field>
+        <field name="question_id" ref="slide_s4_04_q1"/>
     </record>
 
     <record id="slide_s4_04_q1_a2" model="slide.answer">
@@ -248,6 +252,7 @@
         <field name="sequence">2</field>
         <field name="is_correct" eval="False"/>
         <field name="comment">Incorrect! Det skulle kräva att prognosen var lägre än Min. Kontrollera prognosen — kundorder och inleveranser ingår.</field>
+        <field name="question_id" ref="slide_s4_04_q1"/>
     </record>
 
     <record id="slide_s4_04_q1_a3" model="slide.answer">
@@ -255,11 +260,13 @@
         <field name="sequence">3</field>
         <field name="is_correct" eval="False"/>
         <field name="comment">Incorrect! Max − Min är inte formeln; behovet räknas mot prognosen.</field>
+        <field name="question_id" ref="slide_s4_04_q1"/>
     </record>
 
     <record id="slide_s4_04_q2" model="slide.question">
         <field name="question">Vilken är den vanligaste orsaken till att inget förslag skapas?</field>
         <field name="sequence">2</field>
+        <field name="slide_id" ref="slide_s4_04"/>
     </record>
 
     <record id="slide_s4_04_q2_a1" model="slide.answer">
@@ -267,6 +274,7 @@
         <field name="sequence">1</field>
         <field name="is_correct" eval="True"/>
         <field name="comment">Correct! Då kan villkoret prognos &lt; Min aldrig uppfyllas.</field>
+        <field name="question_id" ref="slide_s4_04_q2"/>
     </record>
 
     <record id="slide_s4_04_q2_a2" model="slide.answer">
@@ -274,6 +282,7 @@
         <field name="sequence">2</field>
         <field name="is_correct" eval="False"/>
         <field name="comment">Incorrect! Max = 0 är standardmodellen och fungerar.</field>
+        <field name="question_id" ref="slide_s4_04_q2"/>
     </record>
 
     <record id="slide_s4_04_q2_a3" model="slide.answer">
@@ -281,11 +290,13 @@
         <field name="sequence">3</field>
         <field name="is_correct" eval="False"/>
         <field name="comment">Incorrect! Multiple = 0 betyder bara ingen avrundning.</field>
+        <field name="question_id" ref="slide_s4_04_q2"/>
     </record>
 
     <record id="slide_s4_04_q3" model="slide.question">
         <field name="question">Vad gör leverantörens min_qty?</field>
         <field name="sequence">3</field>
+        <field name="slide_id" ref="slide_s4_04"/>
     </record>
 
     <record id="slide_s4_04_q3_a1" model="slide.answer">
@@ -293,6 +304,7 @@
         <field name="sequence">1</field>
         <field name="is_correct" eval="True"/>
         <field name="comment">Correct! Därför kan förslaget bli större än Min/Max antyder.</field>
+        <field name="question_id" ref="slide_s4_04_q3"/>
     </record>
 
     <record id="slide_s4_04_q3_a2" model="slide.answer">
@@ -300,6 +312,7 @@
         <field name="sequence">2</field>
         <field name="is_correct" eval="False"/>
         <field name="comment">Incorrect! Den kan bara höja.</field>
+        <field name="question_id" ref="slide_s4_04_q3"/>
     </record>
 
     <record id="slide_s4_04_q3_a3" model="slide.answer">
@@ -307,6 +320,8 @@
         <field name="sequence">3</field>
         <field name="is_correct" eval="False"/>
         <field name="comment">Incorrect! Triggningsvillkoret jämför prognos mot Min.</field>
+        <field name="question_id" ref="slide_s4_04_q3"/>
     </record>
 
+    </data>
 </odoo>
