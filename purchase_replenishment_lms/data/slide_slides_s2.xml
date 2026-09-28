@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- SEKTION 2: Från regel till inköpsförslag -->
+
+    <record id="slide_category_s2" model="slide.slide">
+        <field name="name">2. Från regel till inköpsförslag</field>
+        <field name="is_category" eval="True"/>
+        <field name="sequence">50</field>
+    </record>
+
+    <record id="slide_s2_01" model="slide.slide">
+        <field name="name">Prognos vs lagersaldo</field>
+        <field name="sequence">60</field>
+        <field name="slide_category">article</field>
+        <field name="is_published" eval="True"/>
+        <field name="is_preview" eval="False"/>
+        <field name="completion_time">0.25</field>
+        <field name="html_content" type="html">
+<![CDATA[
+<section class="s_cover parallax o_cc o_cc5 pt200 pb200" data-scroll-background-ratio="1">
+    <span class="s_parallax_bg oe_img_bg" style="background-color: #2c5282;"/>
+    <div class="container">
+        <h1 class="display-3-fs" style="text-align: center;">Från regel till inköpsförslag</h1>
+        <p class="lead" style="text-align: center;">Formeln bakom <em>To Order</em> — och varför prognosen styr allt.</p>
+    </div>
+</section>
+
+<section class="s_text_block pt64 pb40">
+    <div class="container s_allow_columns">
+        <h2>Prognosen är inte lagersaldot</h2>
+        <p><strong>On Hand</strong> är vad som ligger på hyllan just nu. <strong>Forecast</strong>
+        (<code>virtual_available</code>) är saldot <em>efter</em> alla in- och utleveranser fram till
+        ledtidsdatumet — inklusive kundorder, inkommande leveranser och redan skapade inköpsrader.</p>
+        <p>Det är prognosen — inte lagersaldot — som avgör om regeln triggar. Därför kan ett förslag
+        skapas trots att du har varor hemma: de är redan tingade av kundorder.</p>
+    </div>
+</section>
+
+<section class="s_text_block pt40 pb64">
+    <div class="container s_allow_columns">
+        <h2>Formeln</h2>
+        <pre>To Order = max(Min, Max) − Prognos − Pågående inköpsrader</pre>
+        <p>Regeln utvärderas <strong>endast</strong> när prognosen faller <em>strikt under</em> Min.
+        Är prognosen lika med Min händer ingenting.</p>
+        <table class="table table-bordered">
+            <tr><th>Steg</th><th>Vad Odoo gör</th></tr>
+            <tr><td>1</td><td>Räknar prognosen (Forecast) fram till ledtidsdatumet.</td></tr>
+            <tr><td>2</td><td>Jämför med Min. Prognos &lt; Min → regeln triggar.</td></tr>
+            <tr><td>3</td><td>Beräknar behovet: <code>max(Min, Max) − prognos</code>.</td></tr>
+            <tr><td>4</td><td>Drar av pågående inköpsrader (RFQ:er som ännu inte är i prognosen).</td></tr>
+            <tr><td>5</td><td>Avrundar till Multiple — uppåt om Max = 0, nedåt om Max &gt; 0.</td></tr>
+            <tr><td>6</td><td>Höjer till leverantörens <code>min_qty</code> om ordern är mindre.</td></tr>
+        </table>
+    </div>
+</section>
+]]>
+        </field>
+        <field name="description">Skillnaden mellan On Hand och Forecast (virtual_available) — och varför prognosen styr om regeln triggar.</field>
+    </record>
+
+    <record id="slide_s2_02" model="slide.slide">
+        <field name="name">Så räknar Odoo ut To Order — steg för steg</field>
+        <field name="sequence">70</field>
+        <field name="slide_category">article</field>
+        <field name="is_published" eval="True"/>
+        <field name="is_preview" eval="False"/>
+        <field name="completion_time">0.33</field>
+        <field name="html_content" type="html">
+<![CDATA[
+<section class="s_text_block pt64 pb40">
+    <div class="container s_allow_columns">
+        <h2>Fem faktorer som ändrar kvantiteten</h2>
+        <p>Det är sällan bara Min och Max som avgör. Följande faktorer kan alla höja eller sänka
+        den slutliga inköpskvantiteten:</p>
+    </div>
+</section>
+
+<section class="s_features pt32 pb48">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <i class="s_features_icon fa fa-truck mb-3 rounded bg-o-color-3"/>
+                <h3 class="h5-fs">Leverantörens min_qty</h3>
+                <p>Är ordern mindre än leverantörens minimikvantitet höjs den upp — oavsett vad Min/Max säger.</p>
+            </div>
+            <div class="col-lg-4">
+                <i class="s_features_icon fa fa-layer-group mb-3 rounded bg-o-color-3"/>
+                <h3 class="h5-fs">Multiple</h3>
+                <p>Avrundar ordern till förpackningsstorleken. Riktningen beror på om Max är 0 eller inte.</p>
+            </div>
+            <div class="col-lg-4">
+                <i class="s_features_icon fa fa-file-invoice mb-3 rounded bg-o-color-3"/>
+                <h3 class="h5-fs">Pågående inköpsrader</h3>
+                <p>Redan skapade inköpsförslag räknas av från behovet — annars skulle du köpa dubbelt.</p>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-lg-4">
+                <i class="s_features_icon fa fa-arrow-down-long mb-3 rounded bg-o-color-3"/>
+                <h3 class="h5-fs">Inkommande leveranser</h3>
+                <p>Bekräftade inköp ligger redan i prognosen och höjer den — därför triggar regeln inte.</p>
+            </div>
+            <div class="col-lg-4">
+                <i class="s_features_icon fa fa-cart-shopping mb-3 rounded bg-o-color-3"/>
+                <h3 class="h5-fs">Utgående kundorder</h3>
+                <p>Reserverade och obekräftade kundorder sänker prognosen och kan trigga regeln.</p>
+            </div>
+            <div class="col-lg-4">
+                <i class="s_features_icon fa fa-clock mb-3 rounded bg-o-color-3"/>
+                <h3 class="h5-fs">Visibility Days</h3>
+                <p>Utökar prognosfönstret bortom ledtiden — fler framtida uttag räknas in.</p>
+            </div>
+        </div>
+    </div>
+</section>
+]]>
+        </field>
+        <field name="description">Formeln To Order = max(Min, Max) − prognos − pågående inköpsrader, i sex steg.</field>
+    </record>
+
+    <record id="slide_s2_03" model="slide.slide">
+        <field name="name">Vad påverkar den slutliga kvantiteten?</field>
+        <field name="sequence">80</field>
+        <field name="slide_category">infographic</field>
+        <field name="is_published" eval="True"/>
+        <field name="is_preview" eval="False"/>
+        <field name="completion_time">0.1</field>
+        <field name="image_1920" type="base64" file="purchase_replenishment_lms/static/src/img/diagram_factors.png"/>
+        <field name="description">Infografik: fem faktorer som höjer eller sänker inköpskvantiteten — min_qty, Multiple, pågående inköp, inkommande och utgående flöden.</field>
+    </record>
+
+    <record id="slide_s2_04" model="slide.slide">
+        <field name="name">🧪 Testa dina kunskaper — Beräkningen</field>
+        <field name="sequence">90</field>
+        <field name="slide_category">quiz</field>
+        <field name="is_published" eval="True"/>
+        <field name="is_preview" eval="False"/>
+        <field name="completion_time">0.25</field>
+        <field name="quiz_first_attempt_reward">100</field>
+        <field name="quiz_second_attempt_reward">75</field>
+        <field name="quiz_third_attempt_reward">50</field>
+        <field name="quiz_fourth_attempt_reward">25</field>
+        <field name="description">Testa dina kunskaper om prognosen och beräkningen av To Order.</field>
+    </record>
+
+    <record id="slide_s2_04_q1" model="slide.question">
+        <field name="question">Vilket värde avgör om en påfyllnadsregel triggar?</field>
+        <field name="sequence">1</field>
+    </record>
+
+    <record id="slide_s2_04_q1_a1" model="slide.answer">
+        <field name="text_value">On Hand (lagersaldot just nu)</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect! Lagersaldot är bara en del av prognosen.</field>
+    </record>
+
+    <record id="slide_s2_04_q1_a2" model="slide.answer">
+        <field name="text_value">Forecast / Virtual Available (prognosen)</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Correct! Villkoret jämför prognosen med Min — inte lagersaldot.</field>
+    </record>
+
+    <record id="slide_s2_04_q1_a3" model="slide.answer">
+        <field name="text_value">Leverantörens min_qty</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect! min_qty höjer kvantiteten efteråt, men triggar inte regeln.</field>
+    </record>
+
+    <record id="slide_s2_04_q2" model="slide.question">
+        <field name="question">Du har 4 st hemma, 94 st på väg in och 6 st i kundorder. Varför kan ett inköpsförslag ändå skapas?</field>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="slide_s2_04_q2_a1" model="slide.answer">
+        <field name="text_value">Prognosen räknar bort kundordern och jämför mot Min</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Correct! Prognosen = 4 + 94 − 6 = 92. Är Min högre än 92 triggar regeln — kontrollera Min.</field>
+    </record>
+
+    <record id="slide_s2_04_q2_a2" model="slide.answer">
+        <field name="text_value">Odoo ignorerar inkommande leveranser</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect! Inkommande leveranser ligger i prognosen. Kontrollera i stället om de är bekräftade.</field>
+    </record>
+
+    <record id="slide_s2_04_q2_a3" model="slide.answer">
+        <field name="text_value">Det är alltid en bugg</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect! Förstår du formeln ser du oftast varför.</field>
+    </record>
+
+    <record id="slide_s2_04_q3" model="slide.question">
+        <field name="question">Varför räknas pågående inköpsrader av från behovet?</field>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="slide_s2_04_q3_a1" model="slide.answer">
+        <field name="text_value">För att undvika att köpa samma vara två gånger</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Correct! Annars skulle varje körning av schemaläggaren skapa ett nytt förslag.</field>
+    </record>
+
+    <record id="slide_s2_04_q3_a2" model="slide.answer">
+        <field name="text_value">För att sänka priset</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect! Kvantiteten påverkas, inte priset.</field>
+    </record>
+
+    <record id="slide_s2_04_q3_a3" model="slide.answer">
+        <field name="text_value">För att uppdatera leverantörens min_qty</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect! min_qty är en leverantörsinställning.</field>
+    </record>
+
+</odoo>

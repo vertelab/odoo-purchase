@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- ═══════════════════════════════════════════════════════════
+         Inköpsförslag i Odoo 18 — Från påfyllnadsregel till inköpsorder
+         4 sektioner, 20 slides
+         ═══════════════════════════════════════════════════════════ -->
+
+    <record id="slide_channel_replenishment" model="slide.channel">
+        <field name="name">Inköpsförslag i Odoo 18 — Från påfyllnadsregel till inköpsorder</field>
+        <field name="description">
+Så räknar Odoo fram ett inköpsförslag. Kursen förklarar påfyllnadsregelns
+Min/Max/Multiple, hur prognosen (Virtual Available) styr, varför Order Deadline
+och Expected Arrival blir olika datum, och hur du felsöker ett förslag som ser fel ut.
+        </field>
+        <field name="channel_type">training</field>
+        <field name="enroll">public</field>
+        <field name="is_published" eval="True"/>
+    </record>
+
+</odoo>
