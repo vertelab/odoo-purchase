@@ -3,7 +3,7 @@
 
 {
     'name': 'Purchase Replenishment: Training (LMS)',
-    'version': '18.0.2.0.0',
+    'version': '18.0.2.0.1',
     'summary': 'eLearning course on purchase proposals and reordering rules',
     'category': 'Purchase/Training',
     'author': 'Vertel Sverige AB',
