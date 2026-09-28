@@ -41,10 +41,7 @@
 
 <section class="s_text_block pt40 pb64">
     <div class="container s_allow_columns">
-        <h2>Formeln</h2>
-        <pre>To Order = max(Min, Max) − Prognos − Pågående inköpsrader</pre>
-        <p>Regeln utvärderas <strong>endast</strong> när prognosen faller <em>strikt under</em> Min.
-        Är prognosen lika med Min händer ingenting.</p>
+        <h2>Så räknar Odoo — steg för steg</h2>
         <table class="table table-bordered">
             <tr><th>Steg</th><th>Vad Odoo gör</th></tr>
             <tr><td>1</td><td>Räknar prognosen (Forecast) fram till ledtidsdatumet.</td></tr>
@@ -54,6 +51,9 @@
             <tr><td>5</td><td>Avrundar till Multiple — uppåt om Max = 0, nedåt om Max &gt; 0.</td></tr>
             <tr><td>6</td><td>Höjer till leverantörens <code>min_qty</code> om ordern är mindre.</td></tr>
         </table>
+        <p class="small text-muted">Steg 5 är värt att notera: avrundningsriktningen beror på om Max är 0.
+        Med tumregeln Max = Min + Multiple − 1 är Max alltid &gt; 0, så avrundningen sker nedåt — och
+        landar på exakt en multipel.</p>
     </div>
 </section>
         </field>
@@ -128,7 +128,7 @@
         <field name="is_preview" eval="False"/>
         <field name="completion_time">0.1</field>
         <field name="image_1920" type="base64" file="purchase_replenishment_lms/static/src/img/diagram_factors.png"/>
-        <field name="description">Infografik: fem faktorer som höjer eller sänker inköpskvantiteten — min_qty, Multiple, pågående inköp, inkommande och utgående flöden.</field>
+        <field name="description">Infografik: fem faktorer som höjer eller sänker inköpskvantiteten.</field>
     </record>
 
     <record id="slide_s2_04" model="slide.slide">
@@ -153,18 +153,18 @@
     </record>
 
     <record id="slide_s2_04_q1_a1" model="slide.answer">
-        <field name="text_value">On Hand (lagersaldot just nu)</field>
+        <field name="text_value">Forecast / Virtual Available (prognosen)</field>
         <field name="sequence">1</field>
-        <field name="is_correct" eval="False"/>
-        <field name="comment">Incorrect! Lagersaldot är bara en del av prognosen.</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Correct! Villkoret jämför prognosen med Min — inte lagersaldot.</field>
         <field name="question_id" ref="slide_s2_04_q1"/>
     </record>
 
     <record id="slide_s2_04_q1_a2" model="slide.answer">
-        <field name="text_value">Forecast / Virtual Available (prognosen)</field>
+        <field name="text_value">On Hand (lagersaldot just nu)</field>
         <field name="sequence">2</field>
-        <field name="is_correct" eval="True"/>
-        <field name="comment">Correct! Villkoret jämför prognosen med Min — inte lagersaldot.</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect! Lagersaldot är bara en del av prognosen.</field>
         <field name="question_id" ref="slide_s2_04_q1"/>
     </record>
 

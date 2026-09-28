@@ -9,7 +9,8 @@
         <field name="description">
 Så räknar Odoo fram ett inköpsförslag. Kursen förklarar påfyllnadsregelns
 Min/Max/Multiple, hur prognosen (Virtual Available) styr, varför Order Deadline
-och Expected Arrival blir olika datum, och hur du felsöker ett förslag som ser fel ut.
+och Expected Arrival blir olika datum, och hur du hanterar att Odoo 18 förbjuder
+Min &gt; Max — Max = 0 är inte längre en giltig konfiguration.
         </field>
         <field name="channel_type">training</field>
         <field name="enroll">public</field>

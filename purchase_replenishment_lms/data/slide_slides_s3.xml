@@ -34,14 +34,12 @@
         <p><strong>Order Deadline</strong> är det datum ordern ska läggas för att varan ska hinna fram i tid.
         När inköpsförslaget skapas av en påfyllnadsregel sätts det till <strong>planeringsdagen</strong> —
         i praktiken ofta dagens datum, eftersom behovet redan finns.</p>
-        <p>Ordern ska alltså läggas <em>nu</em>, inte den 28:e — om behovet uppstod nu.</p>
     </div>
 </section>
 
 <section class="s_text_block pt40 pb64">
     <div class="container s_allow_columns">
         <h2>Expected Arrival (date_planned)</h2>
-        <p><strong>Expected Arrival</strong> är när varan beräknas vara på plats:</p>
         <pre>date_planned = date_order
              + leverantörens ledtid (Vendor Lead Time)
              + inköpets säkerhetstid (Purchase Security Lead Time)</pre>
