@@ -75,3 +75,8 @@ docs/_build/
 
 # OCA rules
 !static/lib/
+.shazam/
+PLAN*
+*.pyc
+graphify-out/
+openspec/
