@@ -17,7 +17,7 @@
         <field name="slide_category">article</field>
         <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
         <field name="is_published" eval="True"/>
-        <field name="is_preview" eval="False"/>
+        <field name="is_preview" eval="True"/>
         <field name="completion_time">0.33</field>
         <field name="html_content" type="html">
 <section class="s_cover parallax o_cc o_cc5 pt200 pb200" data-scroll-background-ratio="1">
@@ -82,7 +82,7 @@
         <field name="slide_category">article</field>
         <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
         <field name="is_published" eval="True"/>
-        <field name="is_preview" eval="False"/>
+        <field name="is_preview" eval="True"/>
         <field name="completion_time">0.33</field>
         <field name="html_content" type="html">
 <section class="s_text_block pt64 pb40">
@@ -181,7 +181,7 @@
         <field name="slide_category">article</field>
         <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
         <field name="is_published" eval="True"/>
-        <field name="is_preview" eval="False"/>
+        <field name="is_preview" eval="True"/>
         <field name="completion_time">0.25</field>
         <field name="html_content" type="html">
 <section class="s_text_block pt64 pb40">
@@ -280,7 +280,7 @@
         <field name="slide_category">quiz</field>
         <field name="channel_id" ref="purchase_replenishment_lms.slide_channel_replenishment"/>
         <field name="is_published" eval="True"/>
-        <field name="is_preview" eval="False"/>
+        <field name="is_preview" eval="True"/>
         <field name="completion_time">0.25</field>
         <field name="quiz_first_attempt_reward">100</field>
         <field name="quiz_second_attempt_reward">75</field>
